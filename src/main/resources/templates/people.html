@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Call Form</title>
+    <script>
+        // JavaScript function to call /v1/fetch-info
+        function getPersonInfo(event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+
+            // Get the form inputs
+            const bearerToken = document.getElementById("bearerToken").value;
+            const gpid = document.getElementById("gpid").value;
+
+            // Ensure both fields are filled
+            if (!bearerToken || !gpid) {
+                document.getElementById("response").innerText = "Please provide both Bearer Token and GPID.";
+                return;
+            }
+
+            // Make the API call
+            fetch(`/v1/fetch-info?bearerToken=${encodeURIComponent(bearerToken)}&gpid=${encodeURIComponent(gpid)}`)
+                .then(response => response.text()) // Parse the response as plain text
+                .then(data => {
+                    document.getElementById("response").innerText = data; // Display the API response
+                })
+                .catch(error => {
+                    document.getElementById("response").innerText = "Error: " + error.message;
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Enter Bearer Token and GPID</h1>
+
+<!-- Form to capture user input -->
+<form onsubmit="getPersonInfo(event)">
+    <label for="bearerToken">Bearer Token: </label>
+    <input type="text" id="bearerToken" required><br><br>
+
+    <label for="gpid">GPID: </label>
+    <input type="text" id="gpid" required><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Response:</h2>
+<pre id="response"></pre> <!-- Display the API response here -->
+</body>
+</html>
